@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <title>VueLoop</title>
+</head>
+<body>
+    <div id="app">
+        <h2>Simple Loop</h2>
+
+        <p v-for="i in 10">{{ i }}</p>
+
+        <h2>Loop through fruits in array</h2>
+
+        <ul>
+            <li v-for="i in fruits"> {{ i }} </li>
+        </ul>
+
+        <input type="text" v-model="newFruit">
+        <button v-on:click="addFruit">Add fruit</button>
+
+        <h2>User object</h2>
+        <table>
+            <tr v-for="(u, key) in user">
+                <td>{{ key }}</td>
+                <td>{{ u }}</td>
+            </tr>
+        </table>
+    </div>
+
+
+    <script>
+        new Vue ({
+            el: '#app',
+
+            data: {
+                fruits: ['Orange','Lemon','Lime','Dragonfruit','Apple',],
+                newFruit: '',
+                user: {
+                    username: 'jwj',
+                    email: 'jwj@gmail.com',
+                    fname: 'Jacob'
+                }
+            },
+
+            methods: {
+                addFruit() {
+                    this.fruits.push(this.newFruit);
+                    this.newFruit = '';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
