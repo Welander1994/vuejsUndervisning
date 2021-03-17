@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="note.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <title>Notes</title>
+</head>
+<body>
+    <div id="app">
+        <button v-on:click="visible = true">tilføj note</button>
+
+        <div class="notes">
+            <div class="note" 
+            v-for="(note, i) in notes"
+            :style=" 'background-color:' + note.color ">
+                <h3>{{ note.title }}</h3>
+                <p>{{ note.body }}</p>
+                <div>{{ note.createdAt }}</div>
+                
+                <button v-on:click="editIndex = i">edit note</button>
+               
+            </div>
+        </div>
+
+     
+
+        <div class="modal" v-if="visible">
+
+            <div class="back-div" v-on:click="visible = false"></div>
+
+            <div class="content">
+                <button v-on:click="visible = false">Close</button>
+                <label>
+                    Titel<br>
+                    <input type="text" v-model="title">
+                </label>
+                <label>
+                    Tekst<br>
+                    <textarea v-model="body"></textarea>
+                </label>
+                <label>
+                    Color<br>
+                    <input type="color" v-model="color">
+                </label>
+                <button v-on:click="addNote">Tilføj note</button>
+            </div>
+        </div>
+
+        
+        <div class="modal" v-if="editIndex != null">
+            <div class="back-div" v-on:click="editIndex = null"></div>
+            <div class="content">
+                <button v-on:click="editIndex = null">Close</button>
+
+                <label>
+                    Titel<br>
+                    <input type="text" v-model="notes[editIndex].title">
+                </label>
+
+                <label>
+                    Tekst<br>
+                    <textarea v-model="notes[editIndex].body"></textarea>
+                </label>
+                <label>
+                    Color<br>
+                    <input type="color" v-model="notes[editIndex].color">
+                </label>
+
+                <button v-on:click="editNote">Rediger note</button>
+            </div>
+        </div>
+
+        
+
+    </div>
+
+  
+
+
+
+
+    <script>
+        new Vue ({
+            el: '#app',
+            data: {
+
+                notes: [],
+                title: '',
+                body: '',
+                createdAt: null,
+                color: '#00ff00',
+                visible: false,
+                visibleEdit: false,
+                editIndex: null,
+
+          
+
+            },
+
+            beforeMount() {
+                this.getLocal();
+            },
+
+            methods: {
+                addNote() {
+                    let note = {
+                        title: this.title,
+                        body: this.body,
+                        createdAt: new Date(),
+                        color: this.color,
+                    };
+
+                    this.notes.push(note);
+
+                    this.saveLocal();
+
+                    this.title = '',
+                    this.body = '',
+                    this.createdAt = null,
+                    this.color = '#00ff00',
+                    this.visible = false;
+                },
+
+             
+       
+                saveLocal() {
+                    const jsonNote = JSON.stringify(this.notes);
+                    localStorage.setItem('notes', jsonNote);
+                },
+
+                getLocal() {
+                    const notes = localStorage.getItem('notes');
+
+                    if(notes == null) {
+                        this.notes = [];
+                    } else {
+                        this.notes = JSON.parse(notes);
+                    }
+                },
+
+                editNote(i) {
+                    this.saveLocal();
+                    this.editIndex = null;
+                },
+
+            },
+        });
+    </script>
+</body>
+</html>
